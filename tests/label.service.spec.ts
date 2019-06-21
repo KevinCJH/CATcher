@@ -1,8 +1,6 @@
 import { LabelService } from '../src/app/core/services/label.service';
-import { GithubService } from '../src/app/core/services/github.service';
 
 let labelService: LabelService;
-const GITHUBSERVICE: GithubService = null; // We do not need to use github services in unit testing
 const COLOR_DARK  = '000000';
 const COLOR_LIGHT  = 'FFFFFF';
 const DARK_BG_LIGHT_TEXT = {
@@ -22,7 +20,7 @@ const LIGHT_BG_DARK_TEXT = {
 
 describe('LabelService: isDarkColor()', () => {
     beforeEach(() => {
-        labelService = new LabelService(GITHUBSERVICE);
+        labelService = new LabelService(null);
     });
 
     it('color should be dark color', () => {
@@ -36,7 +34,7 @@ describe('LabelService: isDarkColor()', () => {
 
 describe('LabelService: setLabelStyle()', () => {
     beforeEach(() => {
-      labelService = new LabelService(GITHUBSERVICE);
+      labelService = new LabelService(null);
     });
 
     it('style should be dark color background with light color text', () => {
