@@ -1,28 +1,28 @@
 import { LabelService } from '../src/app/core/services/label.service';
 import { GithubService } from '../src/app/core/services/github.service';
 
-describe('Service: LabelService', () => {
-    let labelService: LabelService;
-    const GITHUBSERVICE: GithubService = null; // We do not need to use github services in unit testing
-    const COLOR_DARK  = '000000';
-    const COLOR_LIGHT  = 'FFFFFF';
-    const DARK_BG_LIGHT_TEXT = {
-        'background-color' : `#${COLOR_DARK}`,
-        'border-radius' : '3px',
-        'padding' : '3px',
-        'color' : `#${COLOR_LIGHT}`,
-        'font-weight' : '410',
-    };
-    const LIGHT_BG_DARK_TEXT = {
-        'background-color' : `#${COLOR_LIGHT}`,
-        'border-radius' : '3px',
-        'padding' : '3px',
-        'color' : `#${COLOR_DARK}`,
-        'font-weight' : '410',
-    };
+let labelService: LabelService;
+const GITHUBSERVICE: GithubService = null; // We do not need to use github services in unit testing
+const COLOR_DARK  = '000000';
+const COLOR_LIGHT  = 'FFFFFF';
+const DARK_BG_LIGHT_TEXT = {
+    'background-color' : `#${COLOR_DARK}`,
+    'border-radius' : '3px',
+    'padding' : '3px',
+    'color' : `#${COLOR_LIGHT}`,
+    'font-weight' : '410',
+};
+const LIGHT_BG_DARK_TEXT = {
+    'background-color' : `#${COLOR_LIGHT}`,
+    'border-radius' : '3px',
+    'padding' : '3px',
+    'color' : `#${COLOR_DARK}`,
+    'font-weight' : '410',
+};
 
+describe('LabelService: isDarkColor()', () => {
     beforeEach(() => {
-      labelService = new LabelService(GITHUBSERVICE);
+        labelService = new LabelService(GITHUBSERVICE);
     });
 
     it('color should be dark color', () => {
@@ -31,6 +31,12 @@ describe('Service: LabelService', () => {
 
     it('color should be light color', () => {
         expect(labelService.isDarkColor(COLOR_LIGHT)).toEqual(false);
+    });
+});
+
+describe('LabelService: setLabelStyle()', () => {
+    beforeEach(() => {
+      labelService = new LabelService(GITHUBSERVICE);
     });
 
     it('style should be dark color background with light color text', () => {
