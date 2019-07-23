@@ -489,4 +489,10 @@ export class IssueService {
   getIssueTeamFilter(): string {
     return this.issueTeamFilter;
   }
+
+  isTesterResponsePhase(issueId: number): boolean {
+    const issueTitle = 'title';
+    const testerResponsePhasePrefix = '[Tester Response Phase]';
+    return this.issues[issueId][issueTitle].includes(testerResponsePhasePrefix);
+  }
 }

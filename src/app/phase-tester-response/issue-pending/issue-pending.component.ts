@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ACTION_BUTTONS, IssueTablesComponent, TABLE_COLUMNS } from '../../shared/issue-tables/issue-tables.component';
 import { Issue, STATUS } from '../../core/models/issue.model';
+import { IssueService } from '../../core/services/issue.service';
 
 @Component({
   selector: 'app-issue-pending',
@@ -14,8 +15,6 @@ export class IssuePendingComponent implements OnInit {
   readonly displayedColumns = [
     TABLE_COLUMNS.ID,
     TABLE_COLUMNS.TITLE,
-    TABLE_COLUMNS.TYPE,
-    TABLE_COLUMNS.SEVERITY,
     TABLE_COLUMNS.ACTIONS
   ];
   readonly actionButtons: ACTION_BUTTONS[] = [
@@ -23,11 +22,15 @@ export class IssuePendingComponent implements OnInit {
     ACTION_BUTTONS.RESPOND_TO_ISSUE,
     ACTION_BUTTONS.MARK_AS_RESPONDED
   ];
-  readonly filter: (issue: Issue) => boolean = (issue: Issue) => (!issue.status || issue.status === STATUS.Incomplete);
+  filter: (issue: Issue) => boolean;
 
-  constructor() { }
+  constructor(public issueService: IssueService) { }
 
   ngOnInit() {
+    this.filter = (issue: Issue) => {
+      return (!issue.status || issue.status === STATUS.Incomplete) &&
+        this.issueService.isTesterResponsePhase(issue.id);
+    };
   }
 
   applyFilter(filterValue: string) {
