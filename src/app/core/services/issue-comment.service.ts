@@ -55,7 +55,7 @@ export class IssueCommentService {
   createGithubTutorResponse(issueDisputes: IssueDispute[]): string {
     let tutorResponseString = '# Tutor Moderation\n\n';
     for (const issueDispute of issueDisputes) {
-      tutorResponseString += issueDispute.toString();
+      tutorResponseString += issueDispute.toTutorResponseString();
     }
     return tutorResponseString;
   }

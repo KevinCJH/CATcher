@@ -22,6 +22,7 @@ export class IssueDisputeComponent implements OnInit {
 
   @Input() issue: Issue;
   @Input() issueComment: IssueComment;
+  @Output() issueUpdated = new EventEmitter<Issue>();
   @Output() commentUpdated = new EventEmitter<IssueComment>();
   @ViewChild(CommentEditorComponent) commentEditor: CommentEditorComponent;
 
@@ -48,6 +49,8 @@ export class IssueDisputeComponent implements OnInit {
       return;
     }
     this.isFormPending = true;
+
+    this.issue.pending = '' + this.getNumOfPending();
 
     // Update tutor's response in the issue comment
     if (this.issueComment) {
@@ -77,6 +80,14 @@ export class IssueDisputeComponent implements OnInit {
           this.errorHandlingService.handleHttpError(error);
       });
     }
+
+    this.issueService.updateIssue(this.issue).subscribe(
+      (updatedIssue) => {
+        this.issueUpdated.emit(updatedIssue);
+      },
+      (error) => {
+        this.errorHandlingService.handleHttpError(error);
+      });
   }
 
   changeToEditMode() {
@@ -119,5 +130,16 @@ export class IssueDisputeComponent implements OnInit {
 
   getItemTitleText(title: string): string {
     return '## ' + title;
+  }
+
+  getNumOfPending(): number {
+    let pending = this.issue.issueDisputes.length; // Initial pending is number of disputes
+    for (const issueDispute of this.issue.issueDisputes) {
+      // For each number of Done that is checked, reduce pending by one
+      if (this.isTodoChecked(issueDispute.todo)) {
+        pending--;
+      }
+    }
+    return pending;
   }
 }

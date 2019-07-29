@@ -106,18 +106,9 @@ export class IssueService {
       case Phase.phaseTesterResponse:
           return `# Description\n${issue.description}`;
       case Phase.phaseModeration:
-        if (!issue.todoList) {
-          issue.todoList = [];
-        }
-        let todoString = '';
-        for (const todo of issue.todoList) {
-          todoString += todo + '\n';
-        }
         return `# Description\n${issue.description}\n# Team\'s Response\n${issue.teamResponse}\n ` +
-          `## State the duplicated issue here, if any\n${issue.duplicateOf ? `Duplicate of #${issue.duplicateOf}` : `--`}\n` +
-          `## Proposed Assignees\n${issue.assignees.length === 0 ? '--' : issue.assignees.join(', ')}\n` +
-          `## Items for the Tester to Verify\n${this.getTesterResponsesString(issue.testerResponses)}\n` +
-          `# Tutor\'s Response\n${issue.tutorResponse}\n## Tutor to check\n${todoString}`;
+         // `## State the duplicated issue here, if any\n${issue.duplicateOf ? `Duplicate of #${issue.duplicateOf}` : `--`}\n` +
+          `# Disputes\n\n${this.getIssueDisputeString(issue.issueDisputes)}\n`;
       default:
         return issue.description;
     }
@@ -129,6 +120,14 @@ export class IssueService {
       testerResponsesString += testerResponse.toString();
     }
     return testerResponsesString;
+  }
+
+  private getIssueDisputeString(issueDisputes: IssueDispute[]): string {
+    let issueDisputeString = '';
+    for (const issueDispute of issueDisputes) {
+      issueDisputeString += issueDispute.toString();
+    }
+    return issueDisputeString;
   }
 
   deleteIssue(id: number): Observable<Issue> {
@@ -402,6 +401,12 @@ export class IssueService {
 
     if (issue.status) {
       result.push(this.createLabel('status', issue.status));
+    }
+
+    if (issue.pending) {
+      if (+issue.pending > 0) {
+        result.push(this.createLabel('pending', issue.pending));
+      }
     }
 
     return result;

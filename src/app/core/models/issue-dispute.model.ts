@@ -12,10 +12,10 @@ export class IssueDispute {
     }
 
     /*
-    This toString is used to format the tutor's response so that the app can upload it on Github.
+    This method is used to format the tutor's response so that the app can upload it on Github.
     Refer to format in https://github.com/CATcher-org/templates#app-collect-tutor-response
     */
-    toString(): string {
+    toTutorResponseString(): string {
         let toString = '';
         toString += '## :question: ' + this.title + '\n\n';
         toString += this.todo + '\n\n';
@@ -23,4 +23,12 @@ export class IssueDispute {
         toString += '-------------------\n';
         return toString;
       }
+
+    toString(): string {
+        let toString = '';
+        toString += '## :question: ' +  this.title + '\n\n';
+        toString += this.description + '\n\n';
+        toString += '-------------------\n';
+        return toString;
+    }
 }
