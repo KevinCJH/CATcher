@@ -62,12 +62,21 @@ export class IssueDisputeComponent implements OnInit {
         }, (error) => {
           this.errorHandlingService.handleHttpError(error);
       });
+    } else {
+      const issueCommentDescription = this.issueCommentService
+        .createGithubTutorResponse(this.issue.issueDisputes);
 
-      return;
+      this.issueCommentService.createIssueComment(this.issue.id, issueCommentDescription).subscribe(
+        (updatedComment) => {
+          this.isFormPending = false;
+          this.isEditing = false;
+          this.issueComment = updatedComment;
+          this.commentUpdated.emit(updatedComment);
+        },
+        (error) => {
+          this.errorHandlingService.handleHttpError(error);
+      });
     }
-
-    // TODO create issue comment
-
   }
 
   changeToEditMode() {
