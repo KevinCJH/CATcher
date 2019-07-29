@@ -2,7 +2,7 @@ export class IssueDispute {
     title: string; // e.g Downgrade of severity
     description: string; // e.g Team says: xxx\n Tester says: xxx.
     tutorResponse: string; // e.g Not justified. I've changed it back.
-    todo: string; // e.g  - [x]
+    todo: string; // e.g  - [x] Done
 
     constructor(title: string, description: string) {
         this.title = title;
