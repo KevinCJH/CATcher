@@ -125,11 +125,11 @@ export class ViewIssueComponent implements OnInit, OnDestroy {
           return;
         }
         // For Tester Response Phase, where team and tester response items are in the issue's comment
-        if (!this.issue.teamResponse) {
+        if (!this.issue.teamResponse && this.userService.currentUser.role === this.userRole.Student) {
           this.setTeamAndTesterResponse();
         }
-
-        if (this.issue.issueDisputes) {
+        // For Moderation Phase, where tutor responses are in the issue's comment
+        if (this.issue.issueDisputes && this.userService.currentUser.role === this.userRole.Tutor) {
           this.setTutorResponse();
         }
   }
