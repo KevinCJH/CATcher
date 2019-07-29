@@ -51,6 +51,7 @@ export class IssueDisputeComponent implements OnInit {
     this.isFormPending = true;
 
     this.issue.pending = '' + this.getNumOfPending();
+    this.issue.todoList = this.getToDoList();
 
     // Update tutor's response in the issue comment
     if (this.issueComment) {
@@ -61,6 +62,7 @@ export class IssueDisputeComponent implements OnInit {
         (updatedComment) => {
           this.isFormPending = false;
           this.isEditing = false;
+          this.issueComment = updatedComment;
           this.commentUpdated.emit(updatedComment);
         }, (error) => {
           this.errorHandlingService.handleHttpError(error);
@@ -130,6 +132,14 @@ export class IssueDisputeComponent implements OnInit {
 
   getItemTitleText(title: string): string {
     return '## ' + title;
+  }
+
+  getToDoList(): string[] {
+    const toDoList: string[] = [];
+    for (const issueDispute of this.issue.issueDisputes) {
+      toDoList.push(issueDispute.todo);
+    }
+    return toDoList;
   }
 
   getNumOfPending(): number {

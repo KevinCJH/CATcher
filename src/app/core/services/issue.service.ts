@@ -22,8 +22,9 @@ import { Team } from '../models/team.model';
 import { DataService } from './data.service';
 import { ErrorHandlingService } from './error-handling.service';
 import { TesterResponse } from '../models/tester-response.model';
-import { IssueComments } from '../models/comment.model';
+import { IssueComments, IssueComment } from '../models/comment.model';
 import { IssueDispute } from '../models/issue-dispute.model';
+import { UserRole } from '../../core/models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,7 @@ export class IssueService {
   issues$: BehaviorSubject<Issue[]>;
   private issueTeamFilter = 'All Teams';
   readonly MINIMUM_MATCHES = 1;
+  readonly userRole = UserRole;
 
   constructor(private githubService: GithubService,
               private userService: UserService,
@@ -429,7 +431,7 @@ export class IssueService {
           issueInJson['assignees'].map((assignee) => assignee['login']),
         description: issueInJson['body'],
         teamAssigned: this.getTeamAssignedToIssue(issueInJson),
-        todoList: issueInJson['todoList'],
+        todoList: this.getToDoList(issueComments.comments[0], issueInJson['issueDisputes']),
         teamResponse: issueInJson['teamResponse'],
         tutorResponse: issueInJson['tutorResponse'],
         duplicateOf: issueInJson['duplicateOf'],
@@ -502,6 +504,30 @@ export class IssueService {
       }
     }
     return issueDispute;
+  }
+
+  getToDoList(issueComment: IssueComment, issueDisputes: IssueDispute[]): string[] {
+    let matches;
+    const toDoList: string[] = [];
+    const regex = /- .* Done/g;
+
+    if (this.userService.currentUser.role !== this.userRole.Tutor) {
+      return toDoList;
+    }
+
+    if (!issueComment && issueDisputes) {
+      for (const dispute of issueDisputes) {
+        toDoList.push(dispute.todo);
+      }
+      return toDoList;
+    }
+
+    while (matches = regex.exec(issueComment.description)) {
+      if (matches) {
+        toDoList.push(matches[0]);
+      }
+    }
+    return toDoList;
   }
 
   /**
